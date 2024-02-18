@@ -18,6 +18,12 @@ public class PlayerController : MonoBehaviour
     Vector2 minBounds;
     Vector2 maxBounds;
 
+    Shooter shooter;
+
+    private void Awake()
+    {
+        shooter = GetComponent<Shooter>();
+    }
     private void Start()
     {
         InitBounds();
@@ -41,7 +47,14 @@ public class PlayerController : MonoBehaviour
     void OnMove(InputValue value)
     {
         rawInput = value.Get<Vector2>();
-        Debug.Log(rawInput);
+    }
+
+    void OnFire(InputValue value)
+    {
+        if (shooter != null)
+        {
+            shooter.isFiring = value.isPressed;
+        }
     }
 
     // init the bounding vectors that will limit the player to not leave the screen
