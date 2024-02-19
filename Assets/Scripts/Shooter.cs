@@ -17,7 +17,16 @@ public class Shooter : MonoBehaviour
     [SerializeField] float minFiringRate = 0.1f;
 
     [HideInInspector] public bool isFiring;
+    
     Coroutine firingCoroutine;
+    AudioPlayer audioPlayer;
+
+    private void Awake()
+    {
+        audioPlayer = FindObjectOfType<AudioPlayer>();
+
+    }
+
 
     private void Start()
     {
@@ -52,6 +61,7 @@ public class Shooter : MonoBehaviour
             GameObject instance = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
 
             Rigidbody2D rb = instance.GetComponent<Rigidbody2D>();
+            
             if (rb != null)
             {
                 rb.velocity = transform.up * projectileSpeed;
@@ -61,6 +71,8 @@ public class Shooter : MonoBehaviour
 
             float timeToNextProjectile = UnityEngine.Random.Range(baseFiringRate - firingRateVariance, baseFiringRate + firingRateVariance);
             timeToNextProjectile = Mathf.Clamp(timeToNextProjectile, minFiringRate, float.MaxValue);
+
+            audioPlayer.PlayShootingClip();
 
             yield return new WaitForSeconds(timeToNextProjectile);
         }

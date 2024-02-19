@@ -71,7 +71,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1264220271
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: a2696d9b6b5ccdb45b1e3d2f33a6a2e2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -132,7 +132,7 @@ SortingGroup:
   m_GameObject: {fileID: 3979547108880737259}
   m_Enabled: 1
   m_SortingLayerID: -1264220271
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 1
   m_SortAtRoot: 0
 --- !u!114 &8115592152372928901
@@ -221,7 +221,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f56dfeef27c0e19459736f2c74ef898c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healt: 30
+  isPlayer: 0
+  healt: 20
+  score: 50
+  hitEffect: {fileID: 5769048796352095634, guid: 006889cd89c0e8e40a68054f4c5313e5, type: 3}
+  applyCameraShake: 0
 --- !u!114 &-1229513578433975337
 MonoBehaviour:
   m_ObjectHideFlags: 0
