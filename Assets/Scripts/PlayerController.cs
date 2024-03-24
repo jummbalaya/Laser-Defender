@@ -1,5 +1,7 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,7 +13,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float paddingRight = 1f;
     [SerializeField] float paddingTop = 5.0f;
     [SerializeField] float paddingBottom = 2.0f;
+    [SerializeField] public float shieldHP;
+    [SerializeField] GameObject[] ShieldSprites;
 
+    public float shieldMaxHp = 40.0f;
+
+    private bool _hasShieldUp = false;
+
+    public bool HasShieldUp
+    {
+        get { return _hasShieldUp; }
+        set { _hasShieldUp = value; }
+    }
 
     Vector2 rawInput;
 
@@ -28,9 +41,15 @@ public class PlayerController : MonoBehaviour
     {
         InitBounds();
     }
+
     void Update()
     {
         PlayerMove();
+        if (_hasShieldUp == true)
+
+        {
+            ShieldsUp();
+        }
     }
 
     void PlayerMove()
@@ -61,7 +80,49 @@ public class PlayerController : MonoBehaviour
     void InitBounds()
     {
         Camera mainCamera = Camera.main;
-        minBounds = mainCamera.ViewportToWorldPoint(new Vector2(0,0));
+        minBounds = mainCamera.ViewportToWorldPoint(new Vector2(0, 0));
         maxBounds = mainCamera.ViewportToWorldPoint(new Vector2(1, 1));
+    }
+
+    public void ShieldsUp()
+    {
+        float maxShieldHP = 40.0f;
+
+        if (shieldHP == maxShieldHP)
+        {
+            ShieldSpriteActive(0);
+        }
+        if (shieldHP <= maxShieldHP / 2)
+        {
+            ShieldSpriteActive(1);
+        }
+        if (shieldHP <= maxShieldHP / 3)
+        {
+            ShieldSpriteActive(2);
+        }
+        if (shieldHP <= 0)
+        {
+            ShieldSpriteActive(-1);
+        }
+
+
+    }
+
+    public void ShieldSpriteActive(int index)
+    {
+        for (int i = 0; i < ShieldSprites.Length; i++)
+        {
+            ShieldSprites[i].SetActive(false);
+        }
+        if (index < 0)
+        {
+            return;
+        }
+        else
+        {
+            ShieldSprites[index].SetActive(true);
+        }
+
+        
     }
 }

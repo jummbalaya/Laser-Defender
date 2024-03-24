@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - PowerUpHealth
+  - PowerUpShield
   layers:
   - Default
   - TransparentFX
@@ -49,6 +51,9 @@ TagManager:
     locked: 0
   - name: Projectile
     uniqueID: 1254482023
+    locked: 0
+  - name: PowerUps
+    uniqueID: 1649392413
     locked: 0
   - name: Enemy
     uniqueID: 3030747025

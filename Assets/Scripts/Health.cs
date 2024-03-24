@@ -6,16 +6,20 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     [SerializeField] bool isPlayer;
-    [SerializeField] int healt = 50;
+    [SerializeField] int maxHealth = 75;
+    [SerializeField] int healt;
     [SerializeField] int score = 50;
     [SerializeField] ParticleSystem hitEffect;
 
     [SerializeField] bool applyCameraShake;
 
+    [SerializeField] int powerUpHealthAmount = 10;
+
     CameraShake cameraShake;
     AudioPlayer audioPlayer;
     ScoreKeeeper scoreKeeper;
     LevelManager levelManager;
+    PlayerController playerController;
 
     private void Awake()
     {
@@ -23,6 +27,12 @@ public class Health : MonoBehaviour
         audioPlayer = FindObjectOfType<AudioPlayer>();
         scoreKeeper = FindObjectOfType<ScoreKeeeper>();
         levelManager = FindObjectOfType<LevelManager>();
+        playerController = FindObjectOfType<PlayerController>();
+    }
+
+    private void Start()
+    {
+        healt = maxHealth;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -37,6 +47,26 @@ public class Health : MonoBehaviour
             ShakeCamera();
             damageDealer.Hit();
         }
+
+        if (other.CompareTag("PowerUpHealth"))
+        {
+            if(isPlayer && healt < maxHealth)
+            {
+                healt += powerUpHealthAmount;
+                healt = Mathf.Clamp(healt, 0, maxHealth);
+                Destroy(other.gameObject);
+            }
+        }
+
+        if (other.CompareTag("PowerUpShield"))
+        {
+            if (isPlayer)
+            {
+                playerController.HasShieldUp = true;
+                playerController.shieldHP = 40.0f;
+                Destroy(other.gameObject);
+            }
+        }
     }
 
     private void ShakeCamera()
@@ -49,11 +79,25 @@ public class Health : MonoBehaviour
 
     void TakeDamage(int damage)
     {
-        healt -= damage;
-        if (healt <= 0)
+        if (playerController.HasShieldUp)
         {
-            Die();
+            playerController.shieldHP -= damage;
+            audioPlayer.PlayShieldClip();
+            if (playerController.shieldHP <= 0)
+            {
+                playerController.ShieldSpriteActive(-1);
+                playerController.HasShieldUp = false;
+            }
         }
+        else
+        {
+            healt -= damage;
+            if (healt <= 0)
+            {
+                Die();
+            }
+        }
+        
     }
 
     private void Die()
@@ -80,5 +124,10 @@ public class Health : MonoBehaviour
     public int GetHealth()
     {
         return healt;
+    }
+
+    public int GetShield()
+    {
+        return (int)playerController.shieldHP;
     }
 }
