@@ -222,10 +222,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
+  maxHealth: 20
   healt: 20
   score: 50
   hitEffect: {fileID: 5769048796352095634, guid: 006889cd89c0e8e40a68054f4c5313e5, type: 3}
   applyCameraShake: 0
+  powerUpHealthAmount: 10
 --- !u!114 &-2876459413957029572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,7 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e342c019447312847a29dfb8e3b2dbb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 25
+  damage: 15
 --- !u!114 &7775547294872975999
 MonoBehaviour:
   m_ObjectHideFlags: 0

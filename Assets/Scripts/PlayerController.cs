@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float paddingBottom = 2.0f;
     [SerializeField] public float shieldHP;
     [SerializeField] GameObject[] ShieldSprites;
+    [SerializeField] private TrailRenderer trailRenderer;
+
+    [SerializeField] GameObject playerClone;
+
+   
 
     public float shieldMaxHp = 40.0f;
+
+    private Vector2 rawInput;
+    private Vector2 minBounds;
+    private Vector2 maxBounds;
+
+    private Shooter shooter;
 
     private bool _hasShieldUp = false;
 
@@ -26,12 +38,24 @@ public class PlayerController : MonoBehaviour
         set { _hasShieldUp = value; }
     }
 
-    Vector2 rawInput;
+    private float dashSpeedMultiplier = 2.0f;
+    private float dashDuration = 0.2f;
+    private float dashCooldown = 2.0f;
+    private float dashCooldownTimer = 0f;
+    private bool isDashing = false;
+    private float dashSpeed;
+    private float normalSpeed;
 
-    Vector2 minBounds;
-    Vector2 maxBounds;
+    public float GetDashCooldown()
+    {
+        return dashCooldown;
+    }
 
-    Shooter shooter;
+    public float GetDashCooldownTimer()
+    {
+        return dashCooldownTimer;
+    }
+
 
     private void Awake()
     {
@@ -40,20 +64,31 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         InitBounds();
+        normalSpeed = moveSpeed;
     }
 
     void Update()
     {
         PlayerMove();
-        if (_hasShieldUp == true)
 
+        if (_hasShieldUp == true)
         {
             ShieldsUp();
+        }
+
+        if (dashCooldownTimer > 0)
+        {
+            dashCooldownTimer -= Time.deltaTime;
         }
     }
 
     void PlayerMove()
     {
+        if (Input.GetKeyDown(KeyCode.Space) && !isDashing && dashCooldownTimer <= 0)
+        {
+            StartCoroutine(Dash());
+        }
+
         Vector3 delta = rawInput * moveSpeed * Time.deltaTime;
         Vector2 newPos = new Vector2();
 
@@ -61,6 +96,21 @@ public class PlayerController : MonoBehaviour
         newPos.x = Mathf.Clamp(transform.position.x + delta.x, minBounds.x + paddingLeft, maxBounds.x - paddingRight);
         newPos.y = Mathf.Clamp(transform.position.y + delta.y, minBounds.y + paddingBottom, maxBounds.y - paddingTop);
         transform.position = newPos;
+    }
+
+    private IEnumerator Dash()
+    {
+        isDashing = true;
+        moveSpeed *= dashSpeedMultiplier;
+        trailRenderer.emitting = true;
+
+        yield return new WaitForSeconds(dashDuration);
+
+        trailRenderer.emitting = false;
+        moveSpeed = normalSpeed;
+        isDashing = false;
+
+        dashCooldownTimer = dashCooldown;
     }
 
     void OnMove(InputValue value)
@@ -123,6 +173,6 @@ public class PlayerController : MonoBehaviour
             ShieldSprites[index].SetActive(true);
         }
 
-        
+
     }
 }

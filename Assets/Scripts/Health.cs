@@ -20,6 +20,7 @@ public class Health : MonoBehaviour
     ScoreKeeeper scoreKeeper;
     LevelManager levelManager;
     PlayerController playerController;
+    PlayerCloner playerCloner;
 
     private void Awake()
     {
@@ -28,6 +29,7 @@ public class Health : MonoBehaviour
         scoreKeeper = FindObjectOfType<ScoreKeeeper>();
         levelManager = FindObjectOfType<LevelManager>();
         playerController = FindObjectOfType<PlayerController>();
+        playerCloner = FindAnyObjectByType<PlayerCloner>();
     }
 
     private void Start()
@@ -66,6 +68,32 @@ public class Health : MonoBehaviour
                 playerController.shieldHP = 40.0f;
                 Destroy(other.gameObject);
             }
+        }
+
+        /*if (other.CompareTag("PowerUpFleet"))
+        {
+            if (isPlayer)
+            {
+                playerCloner.TriggerCloneCreation();
+                Destroy(other.gameObject);
+
+            }
+        }*/
+
+        if (other.CompareTag("Asteroid"))
+        {
+            if (isPlayer)
+            {
+                PlayHitEffect();
+                audioPlayer.PlayDamageTakenClip();
+                ShakeCamera();
+                Die();
+            }
+
+            PlayHitEffect();
+            audioPlayer.PlayDamageTakenClip();
+            Destroy(gameObject);
+            Destroy(other.gameObject);
         }
     }
 

@@ -10,6 +10,7 @@ public class UIDisplay : MonoBehaviour
     [Header("Health&Shield")]
     [SerializeField] Slider healthSlider;
     [SerializeField] Health playerHealth;
+    [SerializeField] Slider dashSlider;
     [SerializeField] Slider shieldSlider;
     
     [Header("Score")]
@@ -32,12 +33,15 @@ public class UIDisplay : MonoBehaviour
     {
         healthSlider.maxValue = playerHealth.GetHealth();
         shieldSlider.maxValue = playerController.shieldMaxHp;
+        dashSlider.maxValue = playerController.GetDashCooldown();
     }
 
     private void Update()
     {
         healthSlider.value = playerHealth.GetHealth();
         scoreText.text = scoreKeeeper.GetScore().ToString("00000000");
+
+        dashSlider.value = playerController.GetDashCooldownTimer();
 
         if (playerController.HasShieldUp == true)
         {
