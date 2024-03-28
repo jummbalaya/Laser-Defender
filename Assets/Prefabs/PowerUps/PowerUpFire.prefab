@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 1422891871028853081}
   - component: {fileID: 7179369186281954095}
   m_Layer: 0
-  m_Name: PowerUpFleet
-  m_TagString: PowerUpFleet
+  m_Name: PowerUpFire
+  m_TagString: PowerUpFire
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73,8 +73,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1649392413
-  m_SortingLayer: 4
-  m_SortingOrder: 0
+  m_SortingLayer: 3
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: daaf91ff14c5e904aa5c402c5a8cb762, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

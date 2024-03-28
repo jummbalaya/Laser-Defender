@@ -21,6 +21,7 @@ public class Health : MonoBehaviour
     LevelManager levelManager;
     PlayerController playerController;
     PlayerCloner playerCloner;
+    Shooter shooter;
 
     private void Awake()
     {
@@ -30,6 +31,7 @@ public class Health : MonoBehaviour
         levelManager = FindObjectOfType<LevelManager>();
         playerController = FindObjectOfType<PlayerController>();
         playerCloner = FindAnyObjectByType<PlayerCloner>();
+        shooter = GetComponent<Shooter>();
     }
 
     private void Start()
@@ -70,15 +72,14 @@ public class Health : MonoBehaviour
             }
         }
 
-        /*if (other.CompareTag("PowerUpFleet"))
+        if (other.CompareTag("PowerUpFire"))
         {
             if (isPlayer)
             {
-                playerCloner.TriggerCloneCreation();
+                shooter.firingBonus = true;
                 Destroy(other.gameObject);
-
             }
-        }*/
+        }
 
         if (other.CompareTag("Asteroid"))
         {

@@ -7,6 +7,8 @@ TagManager:
   - PowerUpHealth
   - PowerUpShield
   - Asteroid
+  - PowerUpFleet
+  - PowerUpFire
   layers:
   - Default
   - TransparentFX

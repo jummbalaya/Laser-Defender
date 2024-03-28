@@ -17,9 +17,15 @@ public class Shooter : MonoBehaviour
     [SerializeField] float minFiringRate = 0.1f;
 
     [HideInInspector] public bool isFiring;
-    
+
     Coroutine firingCoroutine;
     AudioPlayer audioPlayer;
+
+    [SerializeField] public bool firingBonus = false;
+    private float bonusTimer = 0;
+    private float bonustCD = 12;
+
+
 
     private void Awake()
     {
@@ -30,7 +36,7 @@ public class Shooter : MonoBehaviour
 
     private void Start()
     {
-        if(useAI)
+        if (useAI)
         {
             isFiring = true;
         }
@@ -39,15 +45,26 @@ public class Shooter : MonoBehaviour
     private void Update()
     {
         Fire();
+
+        if (firingBonus)
+        {
+            bonusTimer += Time.deltaTime;
+
+            if (bonusTimer >= bonustCD)
+            {
+                bonusTimer = 0;
+                firingBonus = false;
+            }
+        }
     }
 
     public void Fire()
     {
-        if(isFiring && firingCoroutine == null)
+        if (isFiring && firingCoroutine == null)
         {
             firingCoroutine = StartCoroutine(FireContinuously());
         }
-        else if(!isFiring && firingCoroutine != null)
+        else if (!isFiring && firingCoroutine != null)
         {
             StopCoroutine(firingCoroutine);
             firingCoroutine = null;
@@ -56,18 +73,23 @@ public class Shooter : MonoBehaviour
 
     IEnumerator FireContinuously()
     {
-        while(true)
+        while (true)
         {
             GameObject instance = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
 
             Rigidbody2D rb = instance.GetComponent<Rigidbody2D>();
-            
+
             if (rb != null)
             {
                 rb.velocity = transform.up * projectileSpeed;
             }
 
             Destroy(instance, projectileLifeTime);
+
+            if (firingBonus)
+            {
+                PowerUpFiringBonus();
+            }
 
             float timeToNextProjectile = UnityEngine.Random.Range(baseFiringRate - firingRateVariance, baseFiringRate + firingRateVariance);
             timeToNextProjectile = Mathf.Clamp(timeToNextProjectile, minFiringRate, float.MaxValue);
@@ -76,5 +98,22 @@ public class Shooter : MonoBehaviour
 
             yield return new WaitForSeconds(timeToNextProjectile);
         }
+    }
+
+    private void PowerUpFiringBonus()
+    {
+        float offsetX = 0.5f;
+
+        GameObject instance2 = Instantiate(projectilePrefab, transform.position + new Vector3(offsetX, 0, 0), Quaternion.identity);
+        GameObject instance3 = Instantiate(projectilePrefab, transform.position + new Vector3(-offsetX, 0, 0), Quaternion.identity);
+
+        Rigidbody2D rb1 = instance2.GetComponent<Rigidbody2D>();
+        Rigidbody2D rb2 = instance3.GetComponent<Rigidbody2D>();
+
+        rb1.velocity = transform.up * projectileSpeed;
+        rb2.velocity = transform.up * projectileSpeed;
+
+        Destroy(instance2, projectileLifeTime);
+        Destroy(instance3, projectileLifeTime);
     }
 }

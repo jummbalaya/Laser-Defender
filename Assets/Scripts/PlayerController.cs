@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] GameObject playerClone;
 
-   
+
 
     public float shieldMaxHp = 40.0f;
 
@@ -84,12 +84,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void PlayerDashDo()
     {
         buttonPressed = true;
+        if (!isDashing && dashCooldownTimer <= 0)
+        {
+            StartCoroutine(Dash());
+        }
+        buttonPressed = false;
     }
 
-        public void PlayerMove()
+    public void PlayerMove()
     {
         if (Input.GetKeyDown(KeyCode.Space) || buttonPressed)
         {
@@ -97,7 +102,6 @@ public class PlayerController : MonoBehaviour
             {
                 StartCoroutine(Dash());
             }
-            
         }
 
         Vector3 delta = rawInput * moveSpeed * Time.deltaTime;
@@ -129,11 +133,19 @@ public class PlayerController : MonoBehaviour
         rawInput = value.Get<Vector2>();
     }
 
+    public void PlayerFireWeapon()
+    {
+        if (shooter != null)
+        {
+            shooter.isFiring = true;
+        }
+    }
+
     public void OnFire(InputValue value)
     {
         if (shooter != null)
         {
-            shooter.isFiring = value.isPressed;
+            shooter.isFiring = true;
         }
     }
 
