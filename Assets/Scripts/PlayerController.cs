@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -45,6 +46,7 @@ public class PlayerController : MonoBehaviour
     private bool isDashing = false;
     private float dashSpeed;
     private float normalSpeed;
+    bool buttonPressed = false;
 
     public float GetDashCooldown()
     {
@@ -82,11 +84,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void PlayerMove()
+    public void OnPointerDown(PointerEventData eventData)
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isDashing && dashCooldownTimer <= 0)
+        buttonPressed = true;
+    }
+
+        public void PlayerMove()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) || buttonPressed)
         {
-            StartCoroutine(Dash());
+            if (!isDashing && dashCooldownTimer <= 0)
+            {
+                StartCoroutine(Dash());
+            }
+            
         }
 
         Vector3 delta = rawInput * moveSpeed * Time.deltaTime;
@@ -113,12 +124,12 @@ public class PlayerController : MonoBehaviour
         dashCooldownTimer = dashCooldown;
     }
 
-    void OnMove(InputValue value)
+    public void OnMove(InputValue value)
     {
         rawInput = value.Get<Vector2>();
     }
 
-    void OnFire(InputValue value)
+    public void OnFire(InputValue value)
     {
         if (shooter != null)
         {

@@ -41,7 +41,7 @@ public class Shooter : MonoBehaviour
         Fire();
     }
 
-    private void Fire()
+    public void Fire()
     {
         if(isFiring && firingCoroutine == null)
         {
